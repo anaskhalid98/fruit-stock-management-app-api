@@ -69,9 +69,6 @@ exports.signin = (req, res) => {
 				stock: user.stock,
 				accessToken: token
 			};
-
-			req.session.userData =  userData;
-
-			res.status(200).send(userData);
+			res.status(200).send({accessToken:token});
 		});
 };
