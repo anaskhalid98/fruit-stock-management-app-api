@@ -18,17 +18,16 @@ exports.signup = (req, res) => {
 	const user = new User({
 		username: req.body.username,
 		email: req.body.email,
-		password: hashedPassword ,
-		stock :[]
+		password: hashedPassword,
+		stock: []
 	});
 
 	user.save((err, user) => {
 		if (err) {
-			res.status(500).send({ message: err });
+			res.status(500).send({message: err});
 			return;
-		}
-		else {
-			res.send({ message: "User was registered successfully!", data : user });
+		} else {
+			res.send({message: "User was registered successfully!", data: user});
 		}
 	});
 };
@@ -37,38 +36,37 @@ exports.signin = (req, res) => {
 	User.findOne({
 		username: req.body.username
 	}).exec((err, user) => {
-			if (err) {
-				res.status(500).send({ message: err });
-				return;
-			}
+		if (err) {
+			res.status(500).send({message: err});
+			return;
+		}
 
-			if (!user) {
-				return res.status(404).send({ message: "User Not found." });
-			}
+		if (!user) {
+			return res.status(404).send({message: "User Not found."});
+		}
 
-			let passwordIsValid = bcrypt.compareSync(
-				req.body.password,
-				user.password
-			);
+		let passwordIsValid = bcrypt.compareSync(
+			req.body.password,
+			user.password
+		);
 
-			if (!passwordIsValid) {
-				return res.status(401).send({
-					accessToken: null,
-					message: "Invalid Password!"
-				});
-			}
-
-			let token = jwt.sign({ id: user.id }, config.secret, {
-				expiresIn: 86400 // 24 hours
+		if (!passwordIsValid) {
+			return res.status(401).send({
+				accessToken: null,
+				message: "Invalid Password!"
 			});
+		}
+		const userData = {
+			id: user._id,
+			username: user.username,
+			email: user.email,
+		};
 
-			const userData = {
-				id: user._id,
-				username: user.username,
-				email: user.email,
-				stock: user.stock,
-				accessToken: token
-			};
-			res.status(200).send({accessToken:token});
+		let token = jwt.sign(userData, config.secret, {
+			expiresIn: 86400 // 24 hours
 		});
+
+
+		res.status(200).send({accessToken: token});
+	});
 };

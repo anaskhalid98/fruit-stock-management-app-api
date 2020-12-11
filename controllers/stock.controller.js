@@ -20,7 +20,7 @@ exports.addStock = (req, res) => {
 
 
 	Stock.create(stock)
-		.then(data =>{
+		.then(data => {
 			res.status(200).send({
 				message: "Stock  was created  successfully."
 			});
@@ -32,12 +32,11 @@ exports.addStock = (req, res) => {
 		});
 
 };
-exports.getCurrentUserStock = (req, res) =>{
-	const current_user_id = req.session.userData.id;
+exports.getCurrentUserStock = (req, res) => {
+	const current_user_id = "5fd252430d1e0a4dbcdae931";
 
-
-	Stock.find({ user_id : current_user_id})
-		.then(data =>{
+	Stock.find({user_id: current_user_id})
+		.then(data => {
 			res.status(200).send(data);
 		})
 		.catch(err => {
@@ -45,4 +44,42 @@ exports.getCurrentUserStock = (req, res) =>{
 				message: "Error getting current user stock"
 			});
 		});
+}
+
+exports.transferMerchandise = (req, res) => {
+	if (!req.body) {
+		return res.status(400).send({
+			message: "Can not be empty!"
+		});
+	}
+
+	const number_to_transfer = req.body.number;
+
+	//update departure stock
+	Stock.updateOne(
+		{_id: req.body.departure, "goods.name": req.body.merchandise},
+		{$inc: {"goods.$.total_in_stock": - 1}})
+		.then(data=>{
+		})
+		.catch(err => {
+			res.status(500).send({
+				message: "Error updating stock"
+			});
+		});
+
+	//update arrival stock
+	Stock.updateOne(
+		{_id: req.body.arrival, "goods.name": req.body.merchandise},
+		{$inc: {"goods.$.total_in_stock": 2}})
+		.then(data=>{
+			res.status(200).send({message: "Updated successfully"});
+		})
+		.catch(err => {
+			res.status(500).send({
+				message: "Error updating stock"
+			});
+		});
+
+
+
 }

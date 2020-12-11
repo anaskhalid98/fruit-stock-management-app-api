@@ -13,4 +13,6 @@ module.exports = function(app) {
 
 	app.post("/api/addStock",[authJwt.verifyToken], controller.addStock);
 	app.get("/api/Stock",[authJwt.verifyToken], controller.getCurrentUserStock);
+	app.put("/api/TransferMerchandise",[authJwt.verifyToken], controller.transferMerchandise);
+
 }
