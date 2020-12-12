@@ -1,5 +1,5 @@
 ## Stock management API with nodejs, expressJs, mongoDB
-This API is a backend app for [ReactJs app](https://github.com/anaskhalid98/fruit-stock-management-app).
+This API is a backend  for [ReactJs app](https://github.com/anaskhalid98/fruit-stock-management-app).
 ![](assets/fruit%20stock%20management%20app.gif)
 
 ### Technologies :
