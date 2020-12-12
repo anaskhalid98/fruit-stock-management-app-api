@@ -4,6 +4,33 @@ const Stock = db.stock;
 const User = db.user;
 
 // Create and Save a new stock
+/**
+ {
+    "city_name": "Marseille",
+    "goods": [
+        {
+            "name": "Orange",
+            "total_in_stock": 20
+        },
+        {
+            "name": "Banane",
+            "total_in_stock": 19
+        },
+        {
+            "name": "Pomme",
+            "total_in_stock": 30
+        },
+        {
+            "name": "Fraise",
+            "total_in_stock": 18
+        },
+        {
+            "name": "Cerise",
+            "total_in_stock": 5
+        }
+    ]
+}
+ * */
 exports.addStock = (req, res) => {
 	if (!req.body) {
 		return res.status(400).send({
@@ -12,7 +39,7 @@ exports.addStock = (req, res) => {
 	}
 
 	let token = req.headers["x-access-token"];
-	const  decode = jwt_decode(token);
+	const decode = jwt_decode(token);
 
 	const stock = new Stock({
 		city_name: req.body.city_name,
@@ -35,9 +62,11 @@ exports.addStock = (req, res) => {
 		});
 
 };
+
+
 exports.getCurrentUserStock = (req, res) => {
 	let token = req.headers["x-access-token"];
-	const  decode = jwt_decode(token);
+	const decode = jwt_decode(token);
 
 	Stock.find({user_id: decode.id})
 		.then(data => {
@@ -62,8 +91,8 @@ exports.transferMerchandise = (req, res) => {
 	//update departure stock
 	Stock.updateOne(
 		{_id: req.body.departure, "goods.name": req.body.merchandise},
-		{$inc: {"goods.$.total_in_stock": - quantity_to_change }})
-		.then(data=>{
+		{$inc: {"goods.$.total_in_stock": -quantity_to_change}})
+		.then(data => {
 		})
 		.catch(err => {
 			console.log(err);
@@ -76,7 +105,7 @@ exports.transferMerchandise = (req, res) => {
 	Stock.updateOne(
 		{_id: req.body.arrival, "goods.name": req.body.merchandise},
 		{$inc: {"goods.$.total_in_stock": quantity_to_change}})
-		.then(data=>{
+		.then(data => {
 			res.status(200).send({message: "Updated successfully"});
 		})
 		.catch(err => {
@@ -85,7 +114,6 @@ exports.transferMerchandise = (req, res) => {
 				message: "Error updating stock"
 			});
 		});
-
 
 
 }
