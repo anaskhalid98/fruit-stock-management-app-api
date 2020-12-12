@@ -9,8 +9,10 @@ const Stock = mongoose.model(
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "User"
 		},
-		goods: []
-
+		goods: [{
+			name: String,
+			total_in_stock: Number
+		}]
 	})
 );
 

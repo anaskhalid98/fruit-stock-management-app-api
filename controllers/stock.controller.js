@@ -1,4 +1,5 @@
 const db = require("../models");
+const jwt_decode = require('jwt-decode');
 const Stock = db.stock;
 const User = db.user;
 
@@ -10,14 +11,16 @@ exports.addStock = (req, res) => {
 		});
 	}
 
+	let token = req.headers["x-access-token"];
+	const  decode = jwt_decode(token);
+
 	const stock = new Stock({
 		city_name: req.body.city_name,
 		goods: req.body.goods,
-		user_id: req.session.userData.id
+		user_id: decode.id
 	})
 
-	console.log(req.session.userData.id);
-
+	console.log(stock);
 
 	Stock.create(stock)
 		.then(data => {
@@ -33,9 +36,10 @@ exports.addStock = (req, res) => {
 
 };
 exports.getCurrentUserStock = (req, res) => {
-	const current_user_id = "5fd252430d1e0a4dbcdae931";
+	let token = req.headers["x-access-token"];
+	const  decode = jwt_decode(token);
 
-	Stock.find({user_id: current_user_id})
+	Stock.find({user_id: decode.id})
 		.then(data => {
 			res.status(200).send(data);
 		})
@@ -53,15 +57,16 @@ exports.transferMerchandise = (req, res) => {
 		});
 	}
 
-	const number_to_transfer = req.body.number;
+	const quantity_to_change = parseInt(req.body.quantity);
 
 	//update departure stock
 	Stock.updateOne(
 		{_id: req.body.departure, "goods.name": req.body.merchandise},
-		{$inc: {"goods.$.total_in_stock": - 1}})
+		{$inc: {"goods.$.total_in_stock": - quantity_to_change }})
 		.then(data=>{
 		})
 		.catch(err => {
+			console.log(err);
 			res.status(500).send({
 				message: "Error updating stock"
 			});
@@ -70,11 +75,12 @@ exports.transferMerchandise = (req, res) => {
 	//update arrival stock
 	Stock.updateOne(
 		{_id: req.body.arrival, "goods.name": req.body.merchandise},
-		{$inc: {"goods.$.total_in_stock": 2}})
+		{$inc: {"goods.$.total_in_stock": quantity_to_change}})
 		.then(data=>{
 			res.status(200).send({message: "Updated successfully"});
 		})
 		.catch(err => {
+			console.log(err);
 			res.status(500).send({
 				message: "Error updating stock"
 			});
