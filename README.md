@@ -2,6 +2,14 @@
 This API is a backend app for [ReactJs app](https://github.com/anaskhalid98/fruit-stock-management-app).
 ![](assets/fruit%20stock%20management%20app.gif)
 
+### Technologies :
+ * nodejs
+ * expressjs
+ * mongoDB
+ * jwt
+    
+You can access the api under localhost:3000 
+
 | Methods | Urls | Actions |
 | --- | --- | --- |
 | `POST` | /api/auth/signup | Create a new user |
@@ -9,6 +17,7 @@ This API is a backend app for [ReactJs app](https://github.com/anaskhalid98/frui
 | `POST` | /api/addStock | Create stock   |
 | `POST` | /api/TransferMerchandise| Send goods from place A to B  |
 | `GET` | /api/Stock | Get current user stock  |
+
 
 #### To start the application
 
