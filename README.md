@@ -23,7 +23,7 @@ You can access the api under localhost:3000
 
 Step 1: start mongodb and mongo-express
 
-    docker-compose -f docker-compose.yaml up
+    docker-compose -f ./mongo-docker-compose.yaml up
     
 _You can access the mongo-express under localhost:8080 from your browser_
     
